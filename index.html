@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.17e50649.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.17e50649.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Canvas test</title>
-    <script type="module" crossorigin src="assets/index.b888e14b.js"></script>
-    <link rel="stylesheet" href="assets/index.a768550b.css">
-  </head>
-  <body>
-<!--    <canvas id="canvas"></canvas>-->
-    
-  </body>
+  <script type="module" crossorigin src="assets/index.2ab79baa.js"></script>
+  <link rel="stylesheet" href="assets/index.80388cbb.css">
+</head>
+<body>
+<div class="dev-tools">
+    <button onclick="particles.stop()">Stop animation</button>
+    <button onclick="particles.start()">Start animation</button>
+    <div>
+        <span>WIDTH - </span>
+        <input type="text" id="width" placeholder="width">
+    </div>
+    <div>
+        <span>HEIGHT - </span>
+        <input type="text" id="height" placeholder="height">
+    </div>
+    <div>
+        <span>DRAW MOUSE - </span>
+        <input type="checkbox" id="drawMouse">
+    </div>
+    <div>
+        <span>GENERATE ON MOUSE CLICK - </span>
+        <input type="checkbox" id="generateOnMouseDown">
+    </div>
+</div>
+
+</body>
 </html>
