@@ -60,18 +60,18 @@ class Particles {
             document.body.appendChild(canvas)
         }
 
-        this.width = this.getWidth(width);
-        this.height = this.getHeight(height);
+        this.canvas = canvas;
 
-        canvas.height = this.height;
-        canvas.width = this.width;
+        this.width = Particles.getWidth(width);
+        this.height = Particles.getHeight(height);
+
+        this.canvas.height = this.height;
+        this.canvas.width = this.width;
 
         onresize = () => {
-            canvas!.width = this.getWidth(width);
-            canvas!.height = this.getHeight(height);
+            this.canvas.width = Particles.getWidth(width);
+            this.canvas.height = Particles.getHeight(height);
         }
-
-        this.canvas = canvas;
 
         addEventListener("mousemove", (e) => {
             this.mouseX = e.clientX;
@@ -100,7 +100,15 @@ class Particles {
         this.main()
     }
 
-    private getWidth(width: number | string) {
+    setCanvasWidth(width: string | number) {
+        this.canvas.width = Particles.getWidth(width);
+    }
+
+    setCanvasHeight(height: string | number) {
+        this.canvas.height = Particles.getHeight(height);
+    }
+
+    private static getWidth(width: number | string) {
         if (typeof width === "string") {
             if (width.endsWith("%")) {
                 return parseInt(width) < 100 ? (innerWidth / 100) * parseInt(width) : innerWidth
@@ -112,7 +120,7 @@ class Particles {
         }
     }
 
-    private getHeight(height: number | string) {
+    private static getHeight(height: number | string) {
         if (typeof height === "string") {
             if (height.endsWith("%")) {
                 return parseInt(height) < 100 ? (innerHeight / 100) * parseInt(height) : innerHeight
@@ -155,6 +163,11 @@ class Particles {
 
         if (this.generateOnMouseDown && this.particles.length < this.particlesCount && this.isMouseDown && this.mouseX > 0 && this.mouseY > 0) {
             this.generateParticle(this.mouseX, this.mouseY)
+        }
+
+        if (this.particles.length > this.particlesCount) {
+            console.log("YES")
+            this.particles = this.particles.slice(0, this.particlesCount - 1)
         }
 
         for (let i in this.particles) {
@@ -207,11 +220,19 @@ class Particles {
 
     stop() {
         cancelAnimationFrame(this.animationId)
+        this.animationId = 0;
     }
 
     start() {
-        this.animationId = requestAnimationFrame(this.loop)
+        if (this.animationId <= 0) {
+            this.animationId = requestAnimationFrame(this.loop)
+        }
     }
 }
 
-new Particles({width: "100%", height: "100%"})
+export default Particles
+
+// setInterval(() => {
+//
+// }, 1)
+

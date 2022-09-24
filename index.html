@@ -1,13 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Canvas test</title>
-  </head>
-  <body>
-<!--    <canvas id="canvas"></canvas>-->
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+</head>
+<body>
+<div class="dev-tools">
+    <button onclick="particles.stop()">Stop animation</button>
+    <button onclick="particles.start()">Start animation</button>
+    <div>
+        <span>WIDTH - </span>
+        <input type="text" id="width" placeholder="width">
+    </div>
+    <div>
+        <span>HEIGHT - </span>
+        <input type="text" id="height" placeholder="height">
+    </div>
+    <div>
+        <span>DRAW MOUSE - </span>
+        <input type="checkbox" id="drawMouse">
+    </div>
+    <div>
+        <span>GENERATE ON MOUSE CLICK - </span>
+        <input type="checkbox" id="generateOnMouseDown">
+    </div>
+</div>
+<script type="module">
+    import Particles from "./src/main.ts"
+
+    const config = {width: "100%", height: "100%", drawMouse: true, generateOnMouseDown: false, particlesCount: 200}
+
+    window.particles = new Particles(config)
+
+    const widthInput = document.querySelector("#width")
+    const heightInput = document.querySelector("#height")
+    const drawMouse = document.querySelector("#drawMouse")
+    const generateOnMouseDown = document.querySelector("#generateOnMouseDown")
+
+    widthInput.value = config.width;
+    heightInput.value = config.height;
+    drawMouse.checked = config.drawMouse;
+    generateOnMouseDown.checked = config.generateOnMouseDown;
+
+    drawMouse.addEventListener("input", (e) => {
+        particles.drawMouse = e.target.checked
+    })
+
+    generateOnMouseDown.addEventListener("input", (e) => {
+        particles.generateOnMouseDown = e.target.checked
+        if (e.target.checked) {
+            particles.particlesCount = Infinity
+        } else {
+            particles.particlesCount = config.particlesCount
+        }
+    })
+
+    widthInput.addEventListener("input", e => {
+        particles.setCanvasWidth(e.target.value)
+    })
+
+    heightInput.addEventListener("input", e => {
+        particles.setCanvasHeight(e.target.value)
+    })
+</script>
+</body>
 </html>
