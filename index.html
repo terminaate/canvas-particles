@@ -26,11 +26,27 @@
         <span>GENERATE ON MOUSE CLICK - </span>
         <input type="checkbox" id="generateOnMouseDown">
     </div>
+    <div>
+        <span>DELETE ON MOUSE CLICK - </span>
+        <input type="checkbox" id="deleteOnMouseDown">
+    </div>
+    <div>
+        <span>PARTICLES COUNT - </span>
+        <input type="text" id="particlesCount">
+    </div>
+    <div>
+        <span>MOUSE RADIUS - </span>
+        <input type="text" id="mouseRadius">
+    </div>
+    <!--    <div>-->
+    <!--        <span>PARTICLES VELOCITY - </span>-->
+    <!--        <input type="text" id="particlesVelocity">-->
+    <!--    </div>-->
 </div>
 <script type="module">
-    import Particles from "./src/main.ts"
+    import Particles, {defaultConfig} from "./src/main.ts"
 
-    const config = {width: "100%", height: "100%", drawMouse: true, generateOnMouseDown: false, particlesCount: 200}
+    const config = {...defaultConfig, width: "100%", height: "100%", drawMouse: true}
 
     window.particles = new Particles(config)
 
@@ -38,11 +54,19 @@
     const heightInput = document.querySelector("#height")
     const drawMouse = document.querySelector("#drawMouse")
     const generateOnMouseDown = document.querySelector("#generateOnMouseDown")
+    const particlesCount = document.querySelector("#particlesCount");
+    // const particlesVelocity = document.querySelector("#particlesVelocity")
+    const mouseRadius = document.querySelector("#mouseRadius");
+    const deleteOnMouseDown = document.querySelector("#deleteOnMouseDown");
 
     widthInput.value = config.width;
     heightInput.value = config.height;
     drawMouse.checked = config.drawMouse;
     generateOnMouseDown.checked = config.generateOnMouseDown;
+    particlesCount.value = config.particlesCount + '';
+    // particlesVelocity.value = config.particlesVelocity;
+    mouseRadius.value = config.mouseRadius;
+    deleteOnMouseDown.checked = config.deleteOnMouseDown;
 
     drawMouse.addEventListener("input", (e) => {
         particles.drawMouse = e.target.checked
@@ -55,6 +79,7 @@
         } else {
             particles.particlesCount = config.particlesCount
         }
+        particlesCount.value = particles.particlesCount;
     })
 
     widthInput.addEventListener("input", e => {
@@ -63,6 +88,24 @@
 
     heightInput.addEventListener("input", e => {
         particles.setCanvasHeight(e.target.value)
+    })
+
+    particlesCount.addEventListener("input", e => {
+        const count = parseInt(e.target.value)
+        particles.particlesCount = count;
+        config.particlesCount = count;
+    })
+
+    // particlesVelocity.addEventListener("input", e => {
+    //     particles.particlesVelocity = parseInt(e.target.value);
+    // })
+
+    mouseRadius.addEventListener("input", e => {
+        particles.mouseRadius = parseInt(e.target.value);
+    })
+
+    deleteOnMouseDown.addEventListener("input", (e) => {
+        particles.deleteOnMouseDown = e.target.checked;
     })
 </script>
 </body>

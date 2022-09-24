@@ -18,9 +18,24 @@ type ParticlesProps = {
     width?: number | string;
     height?: number | string;
     generateOnMouseDown?: boolean;
+    deleteOnMouseDown?: boolean;
     particlesCount?: number;
     drawMouse?: boolean;
     animate?: boolean;
+}
+
+export const defaultConfig = {
+    minRadius: 1,
+    maxRadius: 4,
+    particlesVelocity: 2,
+    particlesCount: 200,
+    mouseRadius: 20,
+    width: 500,
+    height: 500,
+    generateOnMouseDown: false,
+    deleteOnMouseDown: true,
+    drawMouse: false,
+    animate: true
 }
 
 class Particles {
@@ -37,6 +52,7 @@ class Particles {
     mouseY: number = 0;
     isMouseDown: boolean = false;
     generateOnMouseDown: boolean;
+    deleteOnMouseDown: boolean;
     particlesCount: number;
     drawMouse: boolean;
     animationId: number = 0;
@@ -53,6 +69,7 @@ class Particles {
                     height = 500,
                     generateOnMouseDown = false,
                     drawMouse = false,
+                    deleteOnMouseDown = true,
                     animate = true
                 }: ParticlesProps = {}) {
         if (!canvas) {
@@ -93,6 +110,7 @@ class Particles {
         this.particlesCount = particlesCount
         this.mouseRadius = mouseRadius;
         this.generateOnMouseDown = generateOnMouseDown;
+        this.deleteOnMouseDown = deleteOnMouseDown;
         this.drawMouse = drawMouse;
         this.animate = animate;
         this.main = this.main.bind(this);
@@ -166,9 +184,13 @@ class Particles {
         }
 
         if (this.particles.length > this.particlesCount) {
-            console.log("YES")
             this.particles = this.particles.slice(0, this.particlesCount - 1)
+        } else if (this.particlesCount !== Infinity) {
+            for (let i = 0; i < this.particlesCount - this.particles.length; i++) {
+                this.generateParticle(Math.random() * this.canvas.width, Math.random() * this.canvas.height)
+            }
         }
+
 
         for (let i in this.particles) {
             let particle = this.particles[i]
@@ -185,10 +207,9 @@ class Particles {
                 particle.y -= particle.velocityY;
             }
 
-            // if ((particle.x < mouseX + config.mouseRadius && particle.x > mouseX - config.mouseRadius) && (particle.y < mouseY + config.mouseRadius && particle.y > mouseY - config.mouseRadius)) {
-            //     particle.x = canvas.width
-            //     particle.y = canvas.height - (particle.radius / 2)
-            // }
+            if (this.isMouseDown && this.deleteOnMouseDown && (particle.x < this.mouseX + this.mouseRadius && particle.x > this.mouseX - this.mouseRadius) && (particle.y < this.mouseY + this.mouseRadius && particle.y > this.mouseY - this.mouseRadius)) {
+                delete this.particles[i]
+            }
         }
 
         let mouseColorOpacity = 0.1
@@ -206,16 +227,20 @@ class Particles {
         }
     }
 
-    generateParticle(x: number = 0, y: number = 0) {
+    private generateParticle(x: number = 0, y: number = 0) {
         const radius = Math.floor(Math.random() * (this.maxRadius - this.minRadius + 1)) + this.minRadius
         this.particles.push({
             x,
             y,
             radius,
             color: `rgb(255, 255, 255, ${Math.random() * 1})`,
-            velocityX: Math.random() * (this.particlesVelocity * 2) - this.particlesVelocity,
-            velocityY: Math.random() * (this.particlesVelocity * 2) + this.particlesVelocity
+            velocityX: this.generateParticleVelocity() - this.particlesVelocity,
+            velocityY: this.generateParticleVelocity() + this.particlesVelocity
         })
+    }
+
+    private generateParticleVelocity() {
+        return Math.random() * (this.particlesVelocity * 2)
     }
 
     stop() {
@@ -231,8 +256,3 @@ class Particles {
 }
 
 export default Particles
-
-// setInterval(() => {
-//
-// }, 1)
-
